@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<link rel="stylesheet" href="../css/style.css">
+
+<title>Neoframe control panel</title>
+</head>
+<body style='background: #383838;'>
+
+
+    <div id="container" class="container">
+        <h1 class="text-center text-monospace" style='color: #EBEBEB; padding:10px;' >Neoframe control panel</h1>
+
+        <h2 class="text-center text-monospace" style='color: #EBEBEB; padding:10px;'>Set frame</h2>
+        <div id="frameList" class="list-group"></div>
+
+        <h2 class="text-center text-monospace" style='color: #EBEBEB; padding:10px;'>Upload new frame</h2>
+        <form ref='uploadForm'
+			id='uploadForm'
+			action='/upload_frame'
+			method='post'
+            encType="multipart/form-data">
+
+            <div class="custom-file">
+                <input type="file" id="inputFile" class="custom-file-input" name="newFrame" required>
+                <label class="custom-file-label" for="inputFile">Choose file</label>
+            </div>
+            <button type="submit" class="btn btn-secondary btn-lg btn-block">Upload frame</button>
+        </form>
+
+        <h2 class="text-center text-monospace" style='color: #EBEBEB; padding:10px;'>Options</h2>
+        <button type="button" class="btn btn-secondary btn-lg btn-block">Random</button>
+        <button type="button" class="btn btn-secondary btn-lg btn-block">???</button>
+
+    </div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+<script>
+    $('#inputFile').on('change',function(){
+        //get the file name
+        var fileName = $(this).val();
+        //replace the "Choose a file" label
+        $(this).next('.custom-file-label').html(fileName);
+    })
+
+    function update_frames() {
+        $.ajax(
+        {
+            type : 'get',
+            url : '/info/frames',
+            dataType : 'json',
+            data : {},
+            success : function(data)
+            {
+                frameList = document.getElementById('frameList');
+                frameList.innerHTML = ""
+
+                for (frame in data) {
+                    var a = document.createElement('a');
+                    a.setAttribute('class', 'list-group-item list-group-item-action');
+                    a.setAttribute('onClick', `set_frame("${data[frame]}")`);
+                    a.text = data[frame]
+                    frameList.appendChild(a)
+
+                }
+            },
+            complete : function(data){}
+        });
+    }
+
+    function set_frame(frame) {
+        $.ajax(
+        {
+            type : 'post',
+            url : '/mode/set_frame',
+            dataType : 'json',
+            data : {"frame": frame},
+            success : function(data){},
+            complete : function(data){}
+        });
+    }
+
+
+    function upload_frame(frame) {
+        $.ajax(
+        {
+            type : 'put',
+            url : '/upload_frame',
+            dataType : 'json',
+            data : {"frame": frame},
+            success : function(data){},
+            complete : function(data){}
+        });
+    }
+
+    // Update available frames
+    update_frames()
+</script>
+
+</body>

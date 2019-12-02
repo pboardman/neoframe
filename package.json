@@ -1,0 +1,24 @@
+{
+  "name": "neoframe",
+  "version": "1.0.0",
+  "description": "neoframe \"smart frame\" electron app",
+  "main": "server/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/pboardman/neoframe",
+  "keywords": [
+    "neoframe",
+    "frame",
+    "iot",
+    "electron"
+  ],
+  "author": "pboardman",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^7.1.2",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.1.6",
+    "image-size": "^0.8.3"
+  }
+}
