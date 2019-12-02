@@ -36,6 +36,10 @@ function createWindow () {
   api.on('set_frame', function (data) {
     mainWindow.webContents.send('set_frame', data);
   });
+
+  api.on('random_mode', function (data) {
+    mainWindow.webContents.send('random_mode', data);
+  });
 }
 
 // This method will be called when Electron has finished

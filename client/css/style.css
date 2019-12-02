@@ -19,3 +19,9 @@
     background: #000000;
     overflow:hidden;
 }
+
+
+body {
+    cursor: none;
+	user-select: none;
+}

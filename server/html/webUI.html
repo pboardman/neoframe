@@ -35,7 +35,7 @@
         </form>
 
         <h2 class="text-center text-monospace" style='color: #EBEBEB; padding:10px;'>Options</h2>
-        <button type="button" class="btn btn-secondary btn-lg btn-block">Random</button>
+        <button type="button" onClick="random_mode()" class="btn btn-secondary btn-lg btn-block">Random</button>
         <button type="button" class="btn btn-secondary btn-lg btn-block">???</button>
 
     </div>
@@ -79,24 +79,25 @@
         });
     }
 
+    function random_mode() {
+        $.ajax(
+        {
+            type : 'get',
+            url : '/mode/random',
+            dataType : 'json',
+            success : function(data)
+            {
+                console.log(data['msg']);
+            },
+            complete : function(data){}
+        });
+    }
+
     function set_frame(frame) {
         $.ajax(
         {
             type : 'post',
             url : '/mode/set_frame',
-            dataType : 'json',
-            data : {"frame": frame},
-            success : function(data){},
-            complete : function(data){}
-        });
-    }
-
-
-    function upload_frame(frame) {
-        $.ajax(
-        {
-            type : 'put',
-            url : '/upload_frame',
             dataType : 'json',
             data : {"frame": frame},
             success : function(data){},

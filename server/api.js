@@ -44,8 +44,8 @@ app.get('/info/frames', function (req, res) {
 
 // Set mode to random
 app.get('/mode/random', function (req, res) {
-    em.emit('test', {});
-    res.send('does nothing yet')
+    em.emit('random_mode', {});
+    res.send({'msg': 'switching to random mode'})
 })
 
 // Set to a specific image
@@ -54,7 +54,7 @@ app.post('/mode/set_frame', function (req, res) {
     // var dimensions = sizeOf('frames/' + req.body.frame);
     // console.log(dimensions.width, dimensions.height);
     em.emit('set_frame', req.body.frame)
-    res.send('does nothing yet')
+    res.send({'msg': 'switching frame'})
 })
 
 // Set to a specific image
