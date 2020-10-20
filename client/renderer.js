@@ -23,7 +23,7 @@ ipcRenderer.on('random_mode', function (event, arg){
         // switch to a random frame
         randomFrame(arg["album"])
         // switch to a random frame every 60 sec
-        random = setInterval(function() { randomFrame(arg["album"]); }, 10000);
+        random = setInterval(function() { randomFrame(arg["album"]); }, 60000);
     }
 })
 

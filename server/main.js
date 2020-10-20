@@ -31,7 +31,7 @@ function createWindow () {
   })
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   api.on('set_frame', function (data) {
     mainWindow.webContents.send('set_frame', data);
