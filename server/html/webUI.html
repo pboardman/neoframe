@@ -17,26 +17,14 @@
     <div id="container" class="container">
         <h1 class="text-center text-monospace" style='color: #EBEBEB; padding:10px;' >Neoframe control panel</h1>
 
-        <h2 class="text-center text-monospace" style='color: #EBEBEB; padding:10px;'>Set frame</h2>
+        <h2 class="text-center text-monospace" style='color: #EBEBEB; padding:10px;'>Choose album</h2>
         <div id="frameList" class="list-group"></div>
 
-        <h2 class="text-center text-monospace" style='color: #EBEBEB; padding:10px;'>Upload new frame</h2>
-        <form ref='uploadForm'
-			id='uploadForm'
-			action='/upload_frame'
-			method='post'
-            encType="multipart/form-data">
-
-            <div class="custom-file">
-                <input type="file" id="inputFile" class="custom-file-input" name="newFrame" required>
-                <label class="custom-file-label" for="inputFile">Choose file</label>
-            </div>
-            <button type="submit" class="btn btn-secondary btn-lg btn-block">Upload frame</button>
+        <h2 class="text-center text-monospace" style='color: #EBEBEB; padding:10px;'>Create new Album</h2>
+        <form ref='createAlbumForm' id='createAlbumForm' action='/create_album' method='post'>
+            <input type="text" class="form-control" id="albumName" name="albumName" placeholder="Album Name" required>
+            <button type="submit" class="btn btn-secondary btn-lg btn-block">Create Album</button>
         </form>
-
-        <h2 class="text-center text-monospace" style='color: #EBEBEB; padding:10px;'>Options</h2>
-        <button type="button" onClick="random_mode()" class="btn btn-secondary btn-lg btn-block">Random</button>
-        <button type="button" class="btn btn-secondary btn-lg btn-block">???</button>
 
     </div>
 
@@ -47,31 +35,24 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
 <script>
-    $('#inputFile').on('change',function(){
-        //get the file name
-        var fileName = $(this).val();
-        //replace the "Choose a file" label
-        $(this).next('.custom-file-label').html(fileName);
-    })
-
-    function update_frames() {
+    function update_albums() {
         $.ajax(
         {
             type : 'get',
-            url : '/info/frames',
+            url : '/info/albums',
             dataType : 'json',
             data : {},
             success : function(data)
             {
-                frameList = document.getElementById('frameList');
-                frameList.innerHTML = ""
+                albumList = document.getElementById('frameList');
+                albumList.innerHTML = ""
 
                 for (frame in data) {
                     var a = document.createElement('a');
                     a.setAttribute('class', 'list-group-item list-group-item-action');
-                    a.setAttribute('onClick', `set_frame("${data[frame]}")`);
+                    a.setAttribute('onClick', `gotoAlbum("${data[frame]}")`);
                     a.text = data[frame]
-                    frameList.appendChild(a)
+                    albumList.appendChild(a)
 
                 }
             },
@@ -79,34 +60,12 @@
         });
     }
 
-    function random_mode() {
-        $.ajax(
-        {
-            type : 'get',
-            url : '/mode/random',
-            dataType : 'json',
-            success : function(data)
-            {
-                console.log(data['msg']);
-            },
-            complete : function(data){}
-        });
-    }
-
-    function set_frame(frame) {
-        $.ajax(
-        {
-            type : 'post',
-            url : '/mode/set_frame',
-            dataType : 'json',
-            data : {"frame": frame},
-            success : function(data){},
-            complete : function(data){}
-        });
+    function gotoAlbum(album) {
+        window.location.replace(`/album?album=${album}`);
     }
 
     // Update available frames
-    update_frames()
+    update_albums()
 </script>
 
 </body>

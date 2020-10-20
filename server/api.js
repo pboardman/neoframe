@@ -6,6 +6,8 @@ var events = require('events');
 var em = new events.EventEmitter();
 
 var fs = require('fs');
+resolve = require('path').resolve
+join = require('path').join
 
 // Use to talk betweem "frontend" and "backend"
 const ipc = require('electron').ipcMain
@@ -20,7 +22,7 @@ app.use(express.urlencoded());
 app.use(express.json());
 
 //Set up server
-let server = app.listen(process.env.PORT || 1337, listen);
+let server = app.listen(process.env.PORT || 1338, listen);
 
 // Callback function confirming server start
 function listen(){
@@ -32,19 +34,38 @@ function listen(){
 
 
 app.get('/', function (req, res) {
-    res.sendfile('server/html/webUI.html')
+    res.sendFile(join(__dirname, 'html/webUI.html'))
 })
 
-// Get a list of all resources available to play
+app.get('/album', function (req, res) {
+    fs.readFile(join(__dirname, 'html/album.html'), "utf8", function(err, data) {
+        res.send(data.replace(/{ALBUM_NAME}/g, req.query["album"]))
+
+    });
+})
+
+// Get a list of all resources available to play TODO: in an album
 app.get('/info/frames', function (req, res) {
-    fs.readdir("frames/", function(err, items) {
+    console.log(req.query["album"])
+    fs.readdir(`frames/${req.query["album"]}`, function(err, items) {
         res.send(items)
+    });
+})
+
+// Get a list of all albums
+app.get('/info/albums', function (req, res) {
+    fs.readdir("frames/", function(err, items) {
+        res.send(
+            items.filter(
+                i => fs.lstatSync(resolve(join('frames/', i))).isDirectory()
+            )
+        )
     });
 })
 
 // Set mode to random
 app.get('/mode/random', function (req, res) {
-    em.emit('random_mode', {});
+    em.emit('random_mode', {album: req.query["album"]});
     res.send({'msg': 'switching to random mode'})
 })
 
@@ -64,14 +85,31 @@ app.post('/upload_frame', function(req, res) {
     }
 
     let newFrame = req.files.newFrame;
+    let album = req.body.albumName;
 
     // Use the mv() method to place the file somewhere on your server
-    newFrame.mv(`frames/${newFrame.name}`, function(err) {
+    newFrame.mv(`frames/${album}/${newFrame.name}`, function(err) {
       if (err)
         return res.status(500).send(err);
 
-        res.redirect('/');
+        res.redirect(`/album?album=${album}`);
     });
+  });
+
+// Create a new album
+app.post('/create_album', function(req, res) {
+    if (!req.body.albumName)
+        res.status(400).send('No album name specified');
+
+    var dir = `frames/${req.body.albumName}`;
+
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+        res.redirect('/');
+    }
+    else {
+        res.send({'msg': 'Album already exist'})
+    }
   });
 
 module.exports = em;
