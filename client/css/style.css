@@ -24,5 +24,7 @@
 
 body {
     cursor: none;
-	user-select: none;
+    user-select: none;
+    display:flex; flex-direction:column; justify-content:center;
+    min-height:100vh;
 }
