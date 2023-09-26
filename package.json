@@ -16,7 +16,7 @@
   "author": "pboardman",
   "license": "MIT",
   "dependencies": {
-    "electron": ">=15.5.5",
+    "electron": ">=26.2.2",
     "express": "^4.17.1",
     "express-fileupload": ">=1.1.9",
     "image-size": "^0.8.3"
